@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:proyecto/src/pages/client/profile/info/client_profile_info_controller.dart';
 
 import '../../../../models/user.dart';
@@ -7,7 +8,7 @@ class ClientProfileInfoPage extends StatelessWidget {
   ClientProfileInfoController clientProfileInfoController = Get.put(ClientProfileInfoController());
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Obx(()=>Scaffold(
         body: Stack(
           children: [
             _backgroundMainImage(context),
@@ -17,7 +18,7 @@ class ClientProfileInfoPage extends StatelessWidget {
 
 
           ],
-        )
+        ))
     );
   }
 
@@ -83,16 +84,17 @@ class ClientProfileInfoPage extends StatelessWidget {
       margin: const EdgeInsets.only(top: 10),
       child: ListTile(
         leading: Icon(Icons.person),
-        title: Text('${clientProfileInfoController.user.name ??''}${clientProfileInfoController.user.lastname?? ''}'),
-        subtitle:Text('Nombre del usuario'),
+        title: Text('${clientProfileInfoController.user.value.name ?? ''} ${clientProfileInfoController.user.value.lastname ?? ''}'),
+        subtitle: Text('Nombre del usuario'),
       ),
     );
   }
+
   Widget _textEmail() {
     return ListTile(
       leading: Icon(Icons.email),
       title: Text(
-          clientProfileInfoController.user.email ?? ''),
+          clientProfileInfoController.user.value.email ?? ''),
       subtitle:Text('Correo Electronico'),
     );
   }
@@ -101,7 +103,7 @@ class ClientProfileInfoPage extends StatelessWidget {
     return ListTile(
       leading: Icon(Icons.phone),
       title: Text(
-          clientProfileInfoController.user.phone ?? ''),
+          clientProfileInfoController.user.value.phone ?? ''),
       subtitle:Text('Telefono'),
     );
   }
@@ -125,8 +127,8 @@ class ClientProfileInfoPage extends StatelessWidget {
         margin: const EdgeInsets.only(top: 25),
         alignment: Alignment.topCenter,
         child: CircleAvatar(
-          backgroundImage:clientProfileInfoController.user.image != null
-              ?NetworkImage(clientProfileInfoController.user.image!)
+          backgroundImage:clientProfileInfoController.user.value.image != null
+              ?NetworkImage(clientProfileInfoController.user.value.image!)
               :const AssetImage('assets/img/add-user.png') as ImageProvider ,
           radius: 80 ,
           backgroundColor: Colors.white,

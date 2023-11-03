@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:proyecto/src/pages/client/profile/update/client_profile_update_controller.dart';
@@ -25,7 +24,7 @@ class ClientProfileUpdaPage extends StatelessWidget {
       height: MediaQuery
           .of(context)
           .size
-          .height * 0.45,
+          .height * 0.56,
       margin: EdgeInsets.only(top: MediaQuery
           .of(context)
           .size
@@ -45,9 +44,11 @@ class ClientProfileUpdaPage extends StatelessWidget {
         child: Column(
           children: [
             _sendYourInfo(),
+            _textFieldEmail(),
             _textFieldName(),
             _textFieldLastName(),
             _textFieldPhone(),
+            _textFielPassword(),
             _buttonUpdate(context)
           ],
         ),
@@ -74,6 +75,20 @@ class ClientProfileUpdaPage extends StatelessWidget {
     );
   }
 
+  Widget _textFieldEmail() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 40),
+      child:  TextField(
+        controller: clientProfileUpdateController.emailController,
+        keyboardType: TextInputType.emailAddress,
+        decoration: const InputDecoration(
+            hintText: 'Correo electronico',
+            prefixIcon: Icon(Icons.email)
+        ),
+      ),
+    );
+  }
+
   Widget _textFielPassword() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 40),
@@ -88,22 +103,6 @@ class ClientProfileUpdaPage extends StatelessWidget {
       ),
     );
   }
-
-
-
-  Widget _textFieldEmail() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 40),
-      child:  TextField(
-        controller: clientProfileUpdateController.emailController,
-        keyboardType: TextInputType.emailAddress,
-        decoration: const InputDecoration(
-            hintText: 'Correo electronico',
-            prefixIcon: Icon(Icons.email)
-        ),
-      ),
-    );
-  }
   Widget _textFieldName() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 40),
@@ -111,8 +110,10 @@ class ClientProfileUpdaPage extends StatelessWidget {
         controller: clientProfileUpdateController.nameController,
         keyboardType: TextInputType.text,
         decoration: const InputDecoration(
-            hintText: 'Nombre',
-            prefixIcon: Icon(Icons.person)
+            hintText: 'Nombre ',
+            prefixIcon: Icon(Icons.person),
+
+
         ),
       ),
     );
@@ -125,7 +126,7 @@ class ClientProfileUpdaPage extends StatelessWidget {
         controller: clientProfileUpdateController.lastnameController,
         keyboardType: TextInputType.text,
         decoration: const InputDecoration(
-            hintText: 'Apellido',
+            hintText: ' Apellido ',
             prefixIcon: Icon(Icons.person_2_outlined)
         ),
       ),

@@ -52,7 +52,7 @@ class RegisterController extends GetxController{
       Stream stream = await userProvider.createWithImage(user, imageFile!);
       stream.listen((res) {
         progressDialog.close();
-        ResponseApi responseApi = ResponseApi.fromJson(jsonDecode(res));
+        ResponseApi responseApi = ResponseApi.fromJson(json.decode(res));
         if(responseApi.success==true){
           GetStorage().write('user', responseApi.data);
           goToHomePage();
@@ -68,7 +68,7 @@ class RegisterController extends GetxController{
 
   }
   void goToHomePage(){
-    Get.offNamedUntil('/client/products/list', (route) => false);
+    Get.offNamedUntil('/client/home', (route) => false);
   }
   bool isValidForm(
       String email,
@@ -117,7 +117,7 @@ class RegisterController extends GetxController{
     }
     return true;
   }
-  Future selectImage(imageSource) async{
+  Future selectImage(ImageSource imageSource) async{
     XFile? image = await picker.pickImage(source: imageSource );
     if(image != null){
       imageFile = File(image.path);
