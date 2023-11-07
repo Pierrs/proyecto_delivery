@@ -13,4 +13,7 @@ class ClientProfileInfoController extends GetxController{
   void goToprofileUpdate(){
     Get.toNamed('/client/profile/update');
   }
+  void goToRoles(){
+    Get.offNamedUntil('/roles', (route) => false);
+  }
 }

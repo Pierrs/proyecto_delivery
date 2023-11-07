@@ -2,14 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:proyecto/src/models/category.dart';
 import 'package:proyecto/src/pages/restaurant/products/create/restaurant_products_create_controller.dart';
+
+
 class RestaurantProductsCreatePage extends StatelessWidget {
 
   RestaurantProductsCreateController restaurantProductsCreateController = Get.put(RestaurantProductsCreateController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
+        body: Obx(()=> Stack(
           children: [
             _backgroundMainImage(context),
             _squareBox(context),
@@ -17,7 +21,8 @@ class RestaurantProductsCreatePage extends StatelessWidget {
 
 
           ],
-        )
+        )),
+
     );
   }
 
@@ -49,8 +54,8 @@ class RestaurantProductsCreatePage extends StatelessWidget {
             _textFieldName(),
             _textFieldDescription(),
             _textFieldPrice(),
+            _dropDownCategories(restaurantProductsCreateController.categories),
             Container(
-              margin: EdgeInsets.only(top: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -80,7 +85,6 @@ class RestaurantProductsCreatePage extends StatelessWidget {
                 ],
               ),
             ),
-
             _buttonCreate(context)
 
           ],
@@ -92,9 +96,9 @@ class RestaurantProductsCreatePage extends StatelessWidget {
   Widget _buttonCreate(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: ElevatedButton(
-          onPressed: () => restaurantProductsCreateController.createCategory(),
+          onPressed: () => restaurantProductsCreateController.createProduct(context),
           style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 18)
           ),
@@ -147,35 +151,75 @@ class RestaurantProductsCreatePage extends StatelessWidget {
       child: TextField(
         controller: restaurantProductsCreateController.descriptionController,
         keyboardType: TextInputType.text,
-        maxLines: 4,
+        maxLines: 3,
         decoration:  InputDecoration(
-            hintText: ' Description ',
+            hintText: ' Descripción',
             prefixIcon: Container(
-              margin:EdgeInsets.only(bottom:50 ),
+              margin:EdgeInsets.only(bottom:40 ),
               child: Icon(Icons.description)
             ),
         ),
       ),
     );
   }
+  Widget _dropDownCategories(List<Category> categories){
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 30),
+      margin: EdgeInsets.only(top: 15),
+      child: DropdownButton(
+        underline: Container(
+          alignment: Alignment.centerRight,
+          child: Icon(
+            Icons.arrow_drop_down_circle,
+            color: Colors.red,
+          ),
+        ),
+        elevation: 3,
+        isExpanded: true,
+        hint: Text(
+          'Selecionar categoria',
+          style: TextStyle(
+            fontSize: 15
+          ),
+        ),
+        items: _dropDownItems(categories),
+        value: restaurantProductsCreateController.idCategory.value==''?null:restaurantProductsCreateController.idCategory.value,
+        onChanged: (option){
+          print('Opcion selecionada ${option}');
+          restaurantProductsCreateController.idCategory.value= option.toString();
+        },
+      ),
+    );
+  }
+  List<DropdownMenuItem<String?>> _dropDownItems(List<Category> categories){
+    List<DropdownMenuItem<String>> list = [];
+    categories.forEach((category) {
+      list.add(DropdownMenuItem(
+          child: Text(category.name??''),
+          value: category.id,
+      ));
+    });
+    return list;
+  }
   Widget _cardImage(BuildContext context, File? imageFile, int numberFile) {
-    return GetBuilder<RestaurantProductsCreateController>(
-      builder: (value) => GestureDetector(
+    return GestureDetector(
         onTap: () => restaurantProductsCreateController.showAlertDialog(context, numberFile),
+        child: Card(
+          elevation: 4,
         child:Container(
-          height:70 ,
+          padding: EdgeInsets.all(2),
+          height:60 ,
             width: MediaQuery.of(context).size.width * 0.18,
-            child:imageFile != null? Image.file(
+            child:imageFile != null?
+            Image.file(
               imageFile,
               fit: BoxFit.cover,
             )
                 : Image(
               image: AssetImage('assets/img/add_image.png'),
             )
-
         ),
-
-      ),
+      )
     );
   }
 
@@ -208,13 +252,13 @@ class RestaurantProductsCreatePage extends StatelessWidget {
   Widget _textNewCategory(BuildContext context) {
     return SafeArea(
       child: Container(
-        margin: const EdgeInsets.only(top: 25),
+        margin: const EdgeInsets.only(top: 55),
         alignment: Alignment.topCenter,
         child:  Text(
           'NUEVA PRODUCTO',
           style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 23
+              fontSize: 30
           ),
         ),
       )

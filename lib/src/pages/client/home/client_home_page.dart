@@ -3,6 +3,7 @@
 import 'package:get/get.dart';
 
 import 'package:proyecto/src/pages/client/products/list/client_products_list_controller.dart';
+import 'package:proyecto/src/pages/client/products/list/client_products_list_page.dart';
 import 'package:proyecto/src/pages/client/profile/info/client_profile_info_page.dart';
 import 'package:proyecto/src/pages/delivery/oders/list/delivery_orders_list_page.dart';
 import 'package:proyecto/src/pages/register/register_page.dart';
@@ -20,7 +21,7 @@ class ClientHomePage extends StatelessWidget {
       body: Obx(()=>IndexedStack(
         index: clientHomeController.indexTab.value,
         children: [
-          RestaurantOrdersListPage(),
+          ClientProductsListPage(),
           DeliveryOrdersListPage(),
           ClientProfileInfoPage()
         ],
@@ -39,7 +40,7 @@ class ClientHomePage extends StatelessWidget {
       items: [
         BottomNavyBarItem(
                 icon: Icon(Icons.apps),
-                title: Text('Home'),
+                title: Text('Productos'),
                 activeColor: Colors.white,
                 inactiveColor: Colors.black
         ),
