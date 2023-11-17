@@ -43,6 +43,14 @@ dependencies:
   modal_bottom_sheet: 3.0.0-pre
   flutter_image_slideshow: ^0.1.6
   fluttertoast: ^8.2.2
+  google_maps_flutter: ^2.5.0
+  geolocator: ^10.1.0
+  geocoding: ^2.1.1
+  location: ^5.0.3
+  intl: ^0.18.1
+  flutter_polyline_points: ^2.0.0
+  flutter_phone_direct_caller: ^2.1.1
+  socket_io_client: ^1.0.2
 
 dev_dependencies:
   flutter_test:

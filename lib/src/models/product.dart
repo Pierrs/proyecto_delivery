@@ -35,7 +35,7 @@ class Product {
     image2: json["image2"],
     image3: json["image3"],
     idCategory: json["id_category"],
-    price: json["price"] is String ? double.tryParse(json["price"]) : json["price"],
+    price: (json["price"] as num).toDouble(),
     quantity: json["quantity"],
   );
 

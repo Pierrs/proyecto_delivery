@@ -1,6 +1,7 @@
 
  import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:proyecto/src/pages/client/orders/list/client_orders_list_page.dart';
 
 import 'package:proyecto/src/pages/client/products/list/client_products_list_controller.dart';
 import 'package:proyecto/src/pages/client/products/list/client_products_list_page.dart';
@@ -22,7 +23,7 @@ class ClientHomePage extends StatelessWidget {
         index: clientHomeController.indexTab.value,
         children: [
           ClientProductsListPage(),
-          DeliveryOrdersListPage(),
+          ClientOrdersListPage(),
           ClientProfileInfoPage()
         ],
       ))
