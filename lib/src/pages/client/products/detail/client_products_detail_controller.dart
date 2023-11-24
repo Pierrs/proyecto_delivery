@@ -2,13 +2,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:proyecto/src/models/product.dart';
+import 'package:proyecto/src/pages/client/products/list/client_products_list_controller.dart';
 
 class ClientProductsDetailController extends GetxController{
   List<Product> selectProducts=[];
+  ClientProductsListController productsListController = Get.find();
 
-  ClientProductsDetailController(){
-
-  }
 
   void checkIfProductsWasAdded(Product product, var price, var counter ){
     price.value = product.price??0.0;
@@ -54,6 +53,10 @@ class ClientProductsDetailController extends GetxController{
       }
       GetStorage().write('shopping_bag', selectProducts);
       Fluttertoast.showToast(msg: 'Producto agregado');
+      productsListController.items.value = 0;
+      selectProducts.forEach((p) {
+        productsListController.items.value = productsListController.items.value + p.quantity!;
+      });
     }
     else{
       Fluttertoast.showToast(msg: 'Debes seleccionar al menos un item para agregar');

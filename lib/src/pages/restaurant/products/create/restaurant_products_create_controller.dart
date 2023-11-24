@@ -38,8 +38,7 @@ class RestaurantProductsCreateController extends GetxController {
     var result = await categoriesProvider.getAll();
     categories.clear();
     categories.addAll(result);
-
-    print("categorias ${result.length}");
+    update();
   }
 
   void createProduct(BuildContext context) async {
@@ -51,6 +50,8 @@ class RestaurantProductsCreateController extends GetxController {
     print('DESCRIPTION: ${description}');
     print('PRICE: ${price}');
     print('ID CATEGORY: ${idCategory}');
+    ProgressDialog progressDialog = ProgressDialog(context: context);
+
     if (isValidForm(name, description, price)) {
       Product product = Product(
           name: name,
@@ -58,18 +59,6 @@ class RestaurantProductsCreateController extends GetxController {
           price: double.parse(price),
           idCategory: idCategory.value
       );
-      ProgressDialog progressDialog = ProgressDialog(context: context);
-
-      if (idCategory.value == '-1') {
-        // Creamos la nueva categoria
-        Category newCategory = Category(
-            name: nameController.text
-        );
-        await categoriesProvider.create(newCategory);
-        idCategory.value = newCategory.id!;
-
-      }
-
       progressDialog.show(max: 100, msg: 'Espere un momento...');
 
       List<File> images = [];

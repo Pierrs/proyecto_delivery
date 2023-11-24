@@ -50,7 +50,7 @@ class ClientProductsListPage extends StatelessWidget {
         body: TabBarView(
           children: clientProductsController.categories.map((Category category){
             return FutureBuilder(
-              future:clientProductsController.getProducts(category.id??'1') ,
+              future:clientProductsController.getProducts(category.id??'1',clientProductsController.productName.value) ,
                 builder: (context,AsyncSnapshot<List<Product>>snapshot){
                 if(snapshot.hasData){
                   if(snapshot.data!.length>0){
@@ -77,14 +77,49 @@ class ClientProductsListPage extends StatelessWidget {
       ),
     ));
   }
-  Widget _iconShoppingBag(){
+
+  Widget _iconShoppingBag() {
     return SafeArea(
       child: Container(
-        margin:EdgeInsets.only(left: 10) ,
-        child: IconButton(
-            onPressed: ()=>clientProductsController.goToOrderCreate(),
-            icon: Icon(Icons.shopping_bag_outlined,
-            size: 30,)
+        margin: EdgeInsets.only(left: 10),
+        child: clientProductsController.items.value > 0
+            ? Stack(
+          children: [
+            IconButton(
+                onPressed: () => clientProductsController.goToOrderCreate(),
+                icon: Icon(
+                  Icons.shopping_bag_outlined,
+                  size: 33,
+                )
+            ),
+
+            Positioned(
+                right: 4,
+                top: 12,
+                child: Container(
+                  width: 16,
+                  height: 16,
+                  alignment: Alignment.center,
+                  child: Text(
+                    '${clientProductsController.items.value}',
+                    style: TextStyle(
+                        fontSize: 12
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(30))
+                  ),
+                )
+            )
+          ],
+        )
+            : IconButton(
+            onPressed: () => clientProductsController.goToOrderCreate(),
+            icon: Icon(
+              Icons.shopping_bag_outlined,
+              size: 30,
+            )
         ),
       ),
     );
@@ -94,6 +129,7 @@ class ClientProductsListPage extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).size.width * 0.75,
         child: TextField(
+          onChanged: clientProductsController.onChangeText,
           decoration: InputDecoration(
             hintText: 'Buscar producto',
             suffixIcon: Icon(Icons.search,color: Colors.grey),

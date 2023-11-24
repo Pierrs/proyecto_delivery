@@ -9,45 +9,34 @@ import 'package:proyecto/src/pages/restaurant/products/create/restaurant_product
 
 class RestaurantProductsCreatePage extends StatelessWidget {
 
-  RestaurantProductsCreateController restaurantProductsCreateController = Get.put(RestaurantProductsCreateController());
+  RestaurantProductsCreateController con = Get.put(RestaurantProductsCreateController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Obx(()=> Stack(
-          children: [
-            _backgroundMainImage(context),
-            _squareBox(context),
-            _textNewCategory(context),
-          ],
-        )),
-
+      body: Obx(() => Stack( // POSICIONAR ELEMENTOS UNO ENCIMA DEL OTRO
+        children: [
+          _backgroundCover(context),
+          _boxForm(context),
+          _textNewCategory(context),
+        ],
+      )),
     );
   }
 
-  Widget _backgroundMainImage(BuildContext context) {
+  Widget _backgroundCover(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: MediaQuery
-          .of(context)
-          .size
-          .height * 0.38,
+      height: MediaQuery.of(context).size.height * 0.35,
       color: Colors.red,
-      alignment: Alignment.topCenter,
-
     );
   }
-  Widget _squareBox(BuildContext context) {
+
+  Widget _boxForm(BuildContext context) {
     return Container(
-      height: MediaQuery
-          .of(context)
-          .size
-          .height * 0.7,
-      margin: EdgeInsets.only(top: MediaQuery
-          .of(context)
-          .size
-          .height * 0.18, left: 50, right: 50),
-      decoration:  BoxDecoration(
+      height: MediaQuery.of(context).size.height * 0.7,
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.18, left: 50, right: 50),
+      decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: <BoxShadow>[
             BoxShadow(
@@ -55,63 +44,43 @@ class RestaurantProductsCreatePage extends StatelessWidget {
                 blurRadius: 15,
                 offset: Offset(0, 0.75)
             )
-
           ]
       ),
       child: SingleChildScrollView(
         child: Column(
           children: [
-            _sendYourInfo(),
+            _textYourInfo(),
             _textFieldName(),
             _textFieldDescription(),
             _textFieldPrice(),
-            _dropDownCategories(restaurantProductsCreateController.categories),
+            _dropDownCategories(con.categories),
             Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GetBuilder<RestaurantProductsCreateController>(
-                    builder: (value) => _cardImage(
-                        context,
-                        restaurantProductsCreateController.imageFile1,
-                        1
-                    ),
+                      builder: (value) =>_cardImage(context, con.imageFile1, 1)
                   ),
-                  SizedBox(width: 5,),
                   GetBuilder<RestaurantProductsCreateController>(
-                    builder: (value) => _cardImage(
-                        context,
-                        restaurantProductsCreateController.imageFile2,
-                        2
-                    ),
+                      builder: (value) =>_cardImage(context, con.imageFile2, 2)
                   ),
-                  SizedBox(width: 5,),
                   GetBuilder<RestaurantProductsCreateController>(
-                    builder: (value) => _cardImage(
-                        context,
-                        restaurantProductsCreateController.imageFile3,
-                        3
-                    ),
+                      builder: (value) =>_cardImage(context, con.imageFile3, 3)
                   ),
                 ],
               ),
             ),
 
             _buttonCreate(context)
-
           ],
         ),
       ),
     );
   }
+
   Widget _dropDownCategories(List<Category> categories) {
-
-
-    print("cate: ${categories.length}");
-    print("cate2: ${restaurantProductsCreateController.categories.length}");
-
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 30),
+      padding: EdgeInsets.symmetric(horizontal: 50),
       margin: EdgeInsets.only(top: 15),
       child: DropdownButton(
         underline: Container(
@@ -124,21 +93,23 @@ class RestaurantProductsCreatePage extends StatelessWidget {
         elevation: 3,
         isExpanded: true,
         hint: Text(
-          'Seleccionar categoría',
+          'Seleccionar categoria',
           style: TextStyle(
-            fontSize: 15,
+
+              fontSize: 15
           ),
         ),
         items: _dropDownItems(categories),
+        value: con.idCategory.value == '' ? null : con.idCategory.value,
         onChanged: (option) {
-          print('Opción seleccionada ${option}');
-          restaurantProductsCreateController.idCategory.value = option.toString();
+          print('Opcion seleccionada ${option}');
+          con.idCategory.value = option.toString();
         },
       ),
     );
   }
 
-  List<DropdownMenuItem<String?>> _dropDownItems(List<Category> categories) {
+  List<DropdownMenuItem<String>> _dropDownItems(List<Category> categories) {
     List<DropdownMenuItem<String>> list = [];
     categories.forEach((category) {
       list.add(DropdownMenuItem(
@@ -152,15 +123,15 @@ class RestaurantProductsCreatePage extends StatelessWidget {
 
   Widget _cardImage(BuildContext context, File? imageFile, int numberFile) {
     return GestureDetector(
-        onTap: () => restaurantProductsCreateController.showAlertDialog(context, numberFile),
+        onTap: () => con.showAlertDialog(context, numberFile),
         child: Card(
-          elevation: 4,
-          child:Container(
-              padding: EdgeInsets.all(2),
-              height:60 ,
+          elevation: 3,
+          child: Container(
+              padding: EdgeInsets.all(10),
+              height: 70,
               width: MediaQuery.of(context).size.width * 0.18,
-              child:imageFile != null?
-              Image.file(
+              child:  imageFile != null
+                  ? Image.file(
                 imageFile,
                 fit: BoxFit.cover,
               )
@@ -174,30 +145,27 @@ class RestaurantProductsCreatePage extends StatelessWidget {
 
   Widget _textFieldName() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 40),
+      margin: EdgeInsets.symmetric(horizontal: 30),
       child: TextField(
-        controller: restaurantProductsCreateController.nameController,
+        controller: con.nameController,
         keyboardType: TextInputType.text,
-        decoration: const InputDecoration(
-          hintText: 'Nombre ',
-          prefixIcon: Icon(Icons.category),
-
-
+        decoration: InputDecoration(
+            hintText: 'Nombre',
+            prefixIcon: Icon(Icons.category)
         ),
       ),
     );
   }
+
   Widget _textFieldPrice() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 40),
+      margin: EdgeInsets.symmetric(horizontal: 30),
       child: TextField(
-        controller: restaurantProductsCreateController.priceController,
+        controller: con.priceController,
         keyboardType: TextInputType.number,
-        decoration: const InputDecoration(
-          hintText: 'Precio ',
-          prefixIcon: Icon(Icons.attach_money),
-
-
+        decoration: InputDecoration(
+            hintText: 'Precio',
+            prefixIcon: Icon(Icons.attach_money)
         ),
       ),
     );
@@ -205,31 +173,32 @@ class RestaurantProductsCreatePage extends StatelessWidget {
 
   Widget _textFieldDescription() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+      margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
       child: TextField(
-        controller: restaurantProductsCreateController.descriptionController,
+        controller: con.descriptionController,
         keyboardType: TextInputType.text,
         maxLines: 3,
-        decoration:  InputDecoration(
-          hintText: ' Descripción',
-          prefixIcon: Container(
-              margin:EdgeInsets.only(bottom:40 ),
-              child: Icon(Icons.description)
-          ),
+        decoration: InputDecoration(
+            hintText: 'Descripcion',
+            prefixIcon: Container(
+                margin: EdgeInsets.only(bottom: 40),
+                child: Icon(Icons.description)
+            )
         ),
       ),
     );
   }
 
-
   Widget _buttonCreate(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      margin: EdgeInsets.only(left: 30, right: 30, top: 18),
       child: ElevatedButton(
-          onPressed: () => restaurantProductsCreateController.createProduct(context),
+          onPressed: () {
+            con.createProduct(context);
+          },
           style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 18)
+              padding: EdgeInsets.symmetric(vertical: 15)
           ),
           child: Text(
             'CREAR PRODUCTO',
@@ -241,29 +210,30 @@ class RestaurantProductsCreatePage extends StatelessWidget {
     );
   }
 
-
   Widget _textNewCategory(BuildContext context) {
+
     return SafeArea(
       child: Container(
-        margin: const EdgeInsets.only(top: 55),
+        margin: EdgeInsets.only(top: 25),
         alignment: Alignment.topCenter,
-        child:  Text(
-          'NUEVA PRODUCTO',
+        child: Text(
+          'NUEVO PRODUCTO',
           style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 30
+              fontSize: 23
           ),
         ),
-      )
+      ),
     );
   }
-  Widget _sendYourInfo() {
+
+  Widget _textYourInfo() {
     return Container(
-      margin:  EdgeInsets.only(top: 40, bottom: 30),
-      child:  Text(
-        'INGRESA ESTA INFORMACIÓN ',
+      margin: EdgeInsets.only(top: 40, bottom: 30),
+      child: Text(
+        'INGRESA ESTA INFORMACION',
         style: TextStyle(
-            color: Colors.black,
+          color: Colors.black,
         ),
       ),
     );
