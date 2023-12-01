@@ -52,6 +52,7 @@ class ClientPaymentsInstallmentsPage extends StatelessWidget {
   }
 
   Widget _dropDownWidget(List<MercadoPagoInstallment> installments) {
+    print('Número de cuotas disponibles: ${installments.length}');
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 30),
 
@@ -60,7 +61,7 @@ class ClientPaymentsInstallmentsPage extends StatelessWidget {
           alignment: Alignment.centerRight,
           child: Icon(
             Icons.arrow_drop_down_circle,
-            color: Colors.red,
+            color: Colors.amber,
           ),
         ),
         elevation: 3,

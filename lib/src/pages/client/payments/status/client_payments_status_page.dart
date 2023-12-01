@@ -24,7 +24,7 @@ class ClientPaymentsStatusPage extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: MediaQuery.of(context).size.height * 0.35,
-      color: Colors.amber,
+      color: Colors.red,
     );
   }
 

@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -22,20 +25,21 @@ class MercadoPagoProvider extends GetConnect {
         'Authorization': 'Bearer ${Environment.ACCESS_TOKEN}'
       },
     ); // ESPERAR HASTA QUE EL SERVIDOR NOS RETORNE LA RESPUESTA
-
+    print('RESPUESTA DEL SERVIDOR: ${response.body}');
     if (response.statusCode == 401) {
-      Get.snackbar('Peticion denegada',
-          'Tu usuario no tiene permitido leer esta informacion');
+      Get.snackbar('Peticion denegada', 'Tu usuario no tiene permitido leer esta informacion');
       return [];
     }
 
-    List<MercadoPagoDocumentType> documents = MercadoPagoDocumentType
-        .fromJsonList(response.body);
+    List<MercadoPagoDocumentType> documents = MercadoPagoDocumentType.fromJsonList(response.body);
 
     return documents;
   }
+
+
   Future<MercadoPagoPaymentMethodInstallments> getInstallments(String bin, double amount) async {
-    Response response = await get(
+    try {
+      Response response = await get(
         '$url/payment_methods/installments',
         headers: {
           'Content-Type': 'application/json',
@@ -43,28 +47,36 @@ class MercadoPagoProvider extends GetConnect {
         },
         query: {
           'bin': bin,
-          'amount': '${amount}'
-        }
-    ); // ESPERAR HASTA QUE EL SERVIDOR NOS RETORNE LA RESPUESTA
+          'amount': '$amount',
+        },
+      );
 
-    print('RESPONSE: ${response}');
-    print('RESPONSE Status code: ${response.statusCode}');
-    print('RESPONSE BODY: ${response.body}');
+      print('RESPONSE: ${response}');
+      print('RESPONSE Status code: ${response.statusCode}');
+      print('RESPONSE BODY: ${response.body}');
 
-    if (response.statusCode == 401) {
-      Get.snackbar('Peticion denegada', 'Tu usuario no tiene permitido leer esta informacion');
+      if (response.statusCode == 401) {
+        Get.snackbar('Peticion denegada', 'Tu usuario no tiene permitido leer esta informacion');
+        return MercadoPagoPaymentMethodInstallments();
+      }
+
+      if (response.statusCode != 200) {
+        Get.snackbar('Error', 'No se pudo obtener las cuotas de la tarjeta');
+        return MercadoPagoPaymentMethodInstallments();
+      }
+
+      // Parsear la respuesta JSON directamente a un objeto MercadoPagoPaymentMethodInstallments
+      var responseData = json.decode(response.body);
+      MercadoPagoPaymentMethodInstallments data = MercadoPagoPaymentMethodInstallments.fromJson(responseData);
+
+      return data;
+    } catch (error) {
+      print('Error en la llamada a la API: $error');
       return MercadoPagoPaymentMethodInstallments();
     }
-
-    if (response.statusCode != 200) {
-      Get.snackbar('Error', 'No se pudo obtener las coutas de la tarjeta');
-      return MercadoPagoPaymentMethodInstallments();
-    }
-
-    MercadoPagoPaymentMethodInstallments data = MercadoPagoPaymentMethodInstallments.fromJson(response.body[0]);
-
-    return data;
   }
+
+
 
   Future<Response> createPayment({
     @required String? token,
