@@ -39,12 +39,12 @@ class FirebaseConfig {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDJEZSAzUrgMhJC_mIPe0IwijlNaA7uXlU',
-    appId: '1:840131425724:android:71499bf832aca57c9aa7b9',
-    messagingSenderId: '840131425724',
-    projectId: 'deliverysql-d2ae5',
+    apiKey: 'AIzaSyAwVD8vABiWZZQtJ26SaaAokg5CK6WDSpI',
+    appId: '1:798875979750:android:0d0b518818753606941027',
+    messagingSenderId: '798875979750',
+    projectId: 'notification-3c798',
     databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
-    storageBucket: 'deliverysql-d2ae5.appspot.com',
+    storageBucket: 'react-native-firebase-testing.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(

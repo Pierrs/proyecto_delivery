@@ -35,12 +35,11 @@ import 'package:proyecto/src/utils/firebase_config.dart';
 User userSession = User.fromJson(GetStorage().read('user')??{});
 PushNotificationsProvider pushNotificationsProvider = PushNotificationsProvider();
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
-  await Firebase.initializeApp(options: FirebaseConfig.currentPlatform);
+  // No es necesario inicializar Firebase aquí nuevamente
   print('Recibiendo notificacion en segundo plano ${message.messageId}');
   // pushNotificationsProvider.showNotification(message);
 }
+
 void main() async{
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();

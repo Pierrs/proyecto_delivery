@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:proyecto/src/models/address.dart';
@@ -10,6 +13,7 @@ import 'package:proyecto/src/models/product.dart';
 import 'package:proyecto/src/models/response_api.dart';
 import 'package:proyecto/src/models/user.dart';
 import 'package:proyecto/src/providers/mercado_pago_provider.dart';
+
 
 class ClientPaymentsInstallmentsController extends GetxController {
 
@@ -27,6 +31,7 @@ class ClientPaymentsInstallmentsController extends GetxController {
 
 
   ClientPaymentsInstallmentsController () {
+    print(GetStorage().read('shopping_bag'));
     if (GetStorage().read('shopping_bag') != null) {
 
       if (GetStorage().read('shopping_bag') is List<Product>) {
@@ -42,6 +47,8 @@ class ClientPaymentsInstallmentsController extends GetxController {
 
       getTotal();
       getInstallments();
+    }else{
+      print('mensaje2');
     }
   }
 

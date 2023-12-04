@@ -9,58 +9,45 @@ import 'package:proyecto/src/models/user.dart';
 import 'package:proyecto/src/providers/address_provider.dart';
 import 'package:proyecto/src/providers/order_provider.dart';
 
-class ClientAddressListController extends GetxController{
+class ClientAddressListController extends GetxController {
 
   List<Address> address = [];
   AddressProvider addressProvider = AddressProvider();
-  User user = User.fromJson(GetStorage().read('user')??{});
-  OrderProvider orderProvider = OrderProvider();
-  var radioValue = 0.obs;
-  ClientAddressListController(){
-    print('LA DIRECCION DE SESSION ${GetStorage().read('address')}');
-  }
-  Future<List<Address>> getAddress()async{
-    address =  await addressProvider.findByUser(user.id??'');
-    
-    Address a = Address.fromJson(GetStorage().read('address')??{});
-    int index = address.indexWhere((add) => add.id==a.id);
+  OrderProvider ordersProvider = OrderProvider();
+  User user = User.fromJson(GetStorage().read('user') ?? {});
 
-    if(index!=-1){
+  var radioValue = 0.obs;
+
+  ClientAddressListController() {
+    print('LA DIRECCION DE SESION ${GetStorage().read('address')}');
+  }
+
+  Future<List<Address>> getAddress() async {
+    address = await addressProvider.findByUser(user.id ?? '');
+    print('Address ${address}');
+    Address a = Address.fromJson(GetStorage().read('address') ?? {}) ; // DIRECCION SELECCIONADA POR EL USUARIO
+    int index = address.indexWhere((ad) => ad.id == a.id);
+
+    if (index != -1) { // LA DIRECCION DE SESION COINCIDE CON UN DATOS DE LA LISTA DE DIRECCIONES
       radioValue.value = index;
     }
+
     return address;
   }
-  void createOrder()async{
-    Address a = Address.fromJson(GetStorage().read('address')??{});
-    List<Product> products=[];
-    if (GetStorage().read('shopping_bag')is List<Product>) {
-      products =GetStorage().read('shopping_bag');
-    }
-    else{
-      products=Product.fromJsonList(GetStorage().read('shopping_bag'));
-    }
 
-    Order order = Order(
-      idClient: user.id,
-      idAddress:a.id,
-      products:products,
-
-    );
-    ResponseApi responseApi = await orderProvider.create(order);
-    Fluttertoast.showToast(msg: responseApi.message??'',toastLength: Toast.LENGTH_LONG);
-    if(responseApi.success==true){
-      GetStorage().remove('shopping_bag');
-      Get.toNamed('/client/payments/create');
-    }
+  void createOrder() async {
+    Get.toNamed('/client/payments/create');
   }
-  void handleRadioValueChange(int? value){
-    radioValue.value=value!;
+
+  void handleRadioValueChange(int? value) {
+    radioValue.value = value!;
     print('VALOR SELECCIONADO ${value}');
     GetStorage().write('address', address[value].toJson());
     update();
   }
 
-  void goToAddresssCreate(){
+  void goToAddressCreate() {
     Get.toNamed('/client/address/create');
   }
+
 }
