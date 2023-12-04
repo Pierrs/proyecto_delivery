@@ -38,8 +38,7 @@ class MercadoPagoProvider extends GetConnect {
 
 
   Future<MercadoPagoPaymentMethodInstallments> getInstallments(String bin, double amount) async {
-    try {
-      Response response = await get(
+    Response response = await get(
         '$url/payment_methods/installments',
         headers: {
           'Content-Type': 'application/json',
@@ -47,33 +46,27 @@ class MercadoPagoProvider extends GetConnect {
         },
         query: {
           'bin': bin,
-          'amount': '$amount',
-        },
-      );
+          'amount': '${amount}'
+        }
+    ); // ESPERAR HASTA QUE EL SERVIDOR NOS RETORNE LA RESPUESTA
 
-      print('RESPONSE: ${response}');
-      print('RESPONSE Status code: ${response.statusCode}');
-      print('RESPONSE BODY: ${response.body}');
+    print('RESPONSE INSTALEMENT: ${response}');
+    print('RESPONSE Status code INSTALEMNT: ${response.statusCode}');
+    print('RESPONSE BODY: ${response.body}');
 
-      if (response.statusCode == 401) {
-        Get.snackbar('Peticion denegada', 'Tu usuario no tiene permitido leer esta informacion');
-        return MercadoPagoPaymentMethodInstallments();
-      }
-
-      if (response.statusCode != 200) {
-        Get.snackbar('Error', 'No se pudo obtener las cuotas de la tarjeta');
-        return MercadoPagoPaymentMethodInstallments();
-      }
-
-      // Parsear la respuesta JSON directamente a un objeto MercadoPagoPaymentMethodInstallments
-      var responseData = json.decode(response.body);
-      MercadoPagoPaymentMethodInstallments data = MercadoPagoPaymentMethodInstallments.fromJson(responseData);
-
-      return data;
-    } catch (error) {
-      print('Error en la llamada a la API: $error');
+    if (response.statusCode == 401) {
+      Get.snackbar('Peticion denegada', 'Tu usuario no tiene permitido leer esta informacion');
       return MercadoPagoPaymentMethodInstallments();
     }
+
+    if (response.statusCode != 200) {
+      Get.snackbar('Error', 'No se pudo obtener las coutas de la tarjeta');
+      return MercadoPagoPaymentMethodInstallments();
+    }
+
+    MercadoPagoPaymentMethodInstallments data = MercadoPagoPaymentMethodInstallments.fromJson(response.body[0]);
+
+    return data;
   }
 
 
